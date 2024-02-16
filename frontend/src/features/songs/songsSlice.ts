@@ -1,21 +1,37 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { song, stats } from "../../utils/types";
-
+export interface FilterCriteria {
+  artist: string;
+  album: string;
+  genre: string;
+}
+interface SongToCreate {
+  title: string;
+  artist: string;
+  album: string;
+  genre: string;
+}
 export interface Songs {
   songs: song[];
-  fetchSongsStatus: string;
-  fetchStatsStatus: string;
+  status: string;
   stats: stats | null;
   error: string | null;
+  updateSong : song | null;
+  deleteSong : string | null;
+  filterCriteria : FilterCriteria;
+  setSongToCreate : { title: string, artist: string, album: string, genre: string } ;
 }
 
 const initialState: Songs = {
   songs: [],
-  fetchSongsStatus: "idle",
-  fetchStatsStatus: "idle",
+  status: "idle",
   stats: null,
   error: null,
+  updateSong : null,
+  deleteSong : null,
+  filterCriteria : { artist: "", album: "", genre: "" },
+  setSongToCreate : { title: "", artist: "", album: "", genre: "" }
 };
 
 const songsSlice = createSlice({
@@ -23,77 +39,83 @@ const songsSlice = createSlice({
   initialState,
   reducers: {
     getSongsStart(state) {
-      state.fetchSongsStatus = "loading";
+      state.status = "loading";
     },
     getSongsSuccess(state, action: PayloadAction<song[]>) {
-      state.fetchSongsStatus = "idle";
+      state.status = "idle";
       state.songs = action.payload;
       state.error = null;
     },
     getSongsFailure(state, action: PayloadAction<string>) {
-      state.fetchSongsStatus = "failed";
+      state.status = "failed";
       state.error = action.payload;
     },
-    createSongStart(state) {
-      state.fetchSongsStatus = "loading";
+    createSongStart(state, action: PayloadAction<SongToCreate>) {
+      state.status = "loading";
+      state.setSongToCreate = action.payload;
     },
     createSongSuccess(state, action: PayloadAction<song>) {
-      state.fetchSongsStatus = "idle";
+      state.status = "idle";
       state.songs.push(action.payload);
       state.error = null;
     },
     createSongFailure(state, action: PayloadAction<string>) {
-      state.fetchSongsStatus = "failed";
+      state.status = "failed";
       state.error = action.payload;
     },
-    filterSongsStart(state) {
-      state.fetchSongsStatus = "loading";
+    filterSongsStart(state, action: PayloadAction<FilterCriteria>) {
+      state.status = "loading";
+      state.filterCriteria = action.payload;
     },
     filterSongsSuccess(state, action: PayloadAction<song[]>) {
-      state.fetchSongsStatus = "idle";
+      state.status = "idle";
       state.songs = action.payload;
       state.error = null;
     },
     filterSongsFailure(state, action: PayloadAction<string>) {
-      state.fetchSongsStatus = "failed";
+      state.status = "failed";
       state.error = action.payload;
     },
     getStatsStart(state) {
-      state.fetchStatsStatus = "loading";
+      state.status = "loading";
+      
     },
     getStatsSuccess(state, action: PayloadAction<stats>) {
-      state.fetchStatsStatus = "idle";
+      state.status = "idle";
       state.stats = action.payload;
       state.error = null;
     },
     getStatsFailure(state, action: PayloadAction<string>) {
-      state.fetchStatsStatus = "failed";
+      state.status = "failed";
       state.error = action.payload;
     },
-    updateSongStart(state) {
-      state.fetchSongsStatus = "loading";
+    updateSongStart(state, action: PayloadAction<song>) {
+      state.status = "loading";
+      state.updateSong = action.payload;
     },
     updateSongSuccess(state, action: PayloadAction<song>) {
-      state.fetchSongsStatus = "idle";
-      state.songs = state.songs.map((song) =>
-        song._id === action.payload._id ? action.payload : song
-      );
+      state.status = "idle";
+      const index = state.songs.findIndex(song => song._id === action.payload._id);
+      if (index !== -1) {
+        state.songs[index] = action.payload; // Replace with the updated song
+      }
       state.error = null;
     },
     updateSongFailure(state, action: PayloadAction<string>) {
-      state.fetchSongsStatus = "failed";
+      state.status = "failed";
       state.error = action.payload;
     },
-    deleteSongStart(state) {
-      state.fetchSongsStatus = "loading";
+    deleteSongStart(state, action: PayloadAction<string>) {
+      state.status = "loading";
+      state.deleteSong = action.payload;
     },
     deleteSongSuccess(state, action: PayloadAction<string>) {
-      state.fetchSongsStatus = "idle";
+      state.status = "idle";
       state.songs = state.songs.filter((song) => song._id !== action.payload);
       state.error = null;
     },
     deleteSongFailure(state, action: PayloadAction<string>) {
-      state.fetchSongsStatus = "failed";
+      state.status = "failed";
       state.error = action.payload;
     },
   },

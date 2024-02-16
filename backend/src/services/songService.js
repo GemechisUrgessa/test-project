@@ -34,7 +34,7 @@ const update = async (id, data) => {
 };
 
 const deleteSong = async (id) => {
-  if (!mongoose.isValidObjectId(someValue)) {
+  if (!mongoose.isValidObjectId(id)) {
     throw new CasterError("Caster error");
   }
   return Song.findByIdAndDelete(id);
@@ -43,14 +43,15 @@ const deleteSong = async (id) => {
 const filter = async (criteria) => {
   let query = {};
   Object.keys(criteria).forEach((key) => {
-    if (criteria[key] !== undefined) {
+    if (criteria[key] !== undefined && criteria[key] !== "") {
       query[key] = criteria[key];
     }
   });
   if (Object.keys(query).length === 0) {
     throw new OneFieldRequiredError("One field required error");
   }
-  return Song.find(criteria);
+  console.log(query);
+  return Song.find(query);
 };
 
 const getStats = async () => {

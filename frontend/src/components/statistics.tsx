@@ -1,23 +1,45 @@
 /** @jsxImportSource @emotion/react */
-import React from "react";
 import Box from "./box";
 import { css } from "@emotion/react";
 import { stats } from "../utils/types";
 import { FaMusic } from "react-icons/fa";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import {} from "react-redux";
-import { getSongsStart } from "../features/songs/songsSlice";
+import { getStatsStart } from "../features/songs/songsSlice";
 
-const Statistics = () => {
-  // const dispatch = useDispatch();
-  const stats = useSelector((state: any) => state.songs.stats);
-  // useEffect(() => {
-  //   // (async () => {
-  //   dispatch(getSongsStart());
-  //   // await dispatch(getStatsStart());
-  //   // })();
-  // }, [dispatch]);
+const Statistics = ({ stats }: { stats: stats }) => {
+  const dispatch = useDispatch();
+  if (stats === null) {
+    dispatch(getStatsStart());
+    return (
+      <Box
+        css={css`
+          max-width: 960px;
+          margin: 2rem auto;
+          padding: 1.5rem;
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        `}
+      >
+        <h2
+          css={css`
+            color: #2c3e50;
+            font-size: 1.75rem;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+          `}
+        >
+          Music Dashboard
+        </h2>
+        <p>Loading...</p>
+      </Box>
+    );
+  }
+
   return (
     <Box
       css={css`

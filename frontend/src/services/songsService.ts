@@ -1,10 +1,10 @@
 import axios from "axios";
 import { song } from "../utils/types";
+import { FilterCriteria } from "../features/songs/songsSlice";
 
 const API_URI = import.meta.env.VITE_URI;
-console.log(API_URI);
 class SongsService {
-    
+
   static async fetchSongs() {
     try {
       const response = await axios.get(`${API_URI}/api/v1/routes`);
@@ -43,14 +43,14 @@ class SongsService {
       throw new Error(error.response?.data?.message || error.message);
     }
   }
-  static async filterSongs(filter: string) {
+static async filterSongs(filter: FilterCriteria) {
     try {
-      const response = await axios.get(`${API_URI}/api/v1/routes?${filter}`);
-      return response.data;
+        const response = await axios.get(`${API_URI}/api/v1/routes/filter`, { params: filter });
+        return response.data.data;
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || error.message);
+        throw new Error(error.response?.data?.message || error.message);
     }
-  }
+}
   static async deleteSong(id: string) {
     try {
       const response = await axios.delete(`${API_URI}/api/v1/routes/${id}`);

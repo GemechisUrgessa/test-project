@@ -1,11 +1,50 @@
 /** @jsxImportSource @emotion/react */
-import React from "react";
+import { useState, useEffect } from "react";
 import Box from "./box";
 import { song } from "../utils/types";
 import { css } from "@emotion/react";
 import { FaMusic } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import Modal from "./modal";
+import {
+  deleteSongStart,
+  getSongsStart,
+  updateSongStart,
+} from "../features/songs/songsSlice";
+import EditSong from "./editSong";
+import DeleteSong from "./deleteSong";
 
 const SongList = ({ songs }: { songs: song[] }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentSong, setCurrentSong] = useState<song | null>(null);
+  const [toDelete, setToDelete] = useState(false);
+
+  const dispatch = useDispatch();
+  useEffect(() => {}, [isModalOpen]);
+  const handleEdit = (song: song) => {
+    setCurrentSong(song);
+    setIsModalOpen(true);
+  };
+  const handleDelete = (song: song) => {
+    setCurrentSong(song);
+    setToDelete(true);
+    setIsModalOpen(true);
+  };
+  const confirmDelete = (songId: string) => {
+    dispatch(deleteSongStart(songId));
+    dispatch(getSongsStart());
+    // Note: window.location.reload() is not a good practice
+    window.location.reload();
+    setIsModalOpen(false);
+  };
+  const handleSave = (song: any) => {
+    dispatch(updateSongStart(song));
+    dispatch(getSongsStart());
+    // Note: window.location.reload() is not a good practice
+    window.location.reload();
+    setIsModalOpen(false);
+  };
+
   return (
     <Box
       css={css`
@@ -119,6 +158,7 @@ const SongList = ({ songs }: { songs: song[] }) => {
             `}
           >
             <button
+              onClick={() => handleEdit(song)}
               css={css`
                 padding: 8px 16px;
                 background-color: #4caf50;
@@ -129,6 +169,7 @@ const SongList = ({ songs }: { songs: song[] }) => {
               Edit
             </button>
             <button
+              onClick={() => handleDelete(song)}
               css={css`
                 padding: 8px 16px;
                 background-color: #f44336;
@@ -141,6 +182,29 @@ const SongList = ({ songs }: { songs: song[] }) => {
           </Box>
         </Box>
       ))}
+      {isModalOpen && currentSong && (
+        <Modal isOpen={isModalOpen}>
+          {toDelete ? (
+            <DeleteSong
+              isOpen={isModalOpen}
+              song={currentSong}
+              onClose={() => {
+                setIsModalOpen(false);
+              }}
+              onDelete={confirmDelete}
+            />
+          ) : (
+            <EditSong
+              isOpen={isModalOpen}
+              song={currentSong}
+              onSave={handleSave}
+              onClose={() => {
+                setIsModalOpen(false);
+              }}
+            />
+          )}
+        </Modal>
+      )}
     </Box>
   );
 };

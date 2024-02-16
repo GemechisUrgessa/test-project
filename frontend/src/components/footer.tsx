@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import React from "react";
 
 const footerStyle = css`
   padding: 2rem;
@@ -44,8 +43,7 @@ const Footer = () => {
       <div className="footer-content">
         <div className="brand">Gemechis</div>
         <nav>
-          <a href="/terms">Terms of Service</a> |
-          <a href="/privacy">Privacy Policy</a>
+          <a href="#">Terms of Service</a> |<a href="#">Privacy Policy</a>
         </nav>
         <div>© {new Date().getFullYear()} Gemechis. All rights reserved.</div>
       </div>

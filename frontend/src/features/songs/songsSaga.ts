@@ -1,5 +1,4 @@
-// src/features/yourFeatureSaga.js
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
 import {
   getSongsStart,
   getSongsSuccess,
@@ -23,7 +22,7 @@ import {
 import SongsService from "../../services/songsService";
 import { song, stats } from "../../utils/types";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
+import { FilterCriteria } from "./songsSlice";
 function* fetchSongSaga() {
   try {
     const data: song[] = yield call(SongsService.fetchSongs);
@@ -40,6 +39,7 @@ function* fetchSongSaga() {
 function* fetchStatsSaga() {
   try {
     const data: stats = yield call(SongsService.fetchStats);
+
     yield put(getStatsSuccess(data));
   } catch (error: any) {
     if (error instanceof Error) {
@@ -53,7 +53,6 @@ function* fetchStatsSaga() {
 function* createSongSaga(action: PayloadAction<song>) {
   try {
     const data: song = yield call(SongsService.createSong, action.payload);
-    console.log(data, "data");
     yield put(createSongSuccess(data));
   } catch (error: any) {
     if (error instanceof Error) {
@@ -64,9 +63,10 @@ function* createSongSaga(action: PayloadAction<song>) {
   }
 }
 
-function* filterSongsSaga(action: PayloadAction<string>) {
+function* filterSongsSaga(action: PayloadAction<FilterCriteria>) {
   try {
     const data: song[] = yield call(SongsService.filterSongs, action.payload);
+    console.log(data, "data");
     yield put(filterSongsSuccess(data));
   } catch (error: any) {
     if (error instanceof Error) {
@@ -104,7 +104,7 @@ function* deleteSongSaga(action: PayloadAction<string>) {
 }
 
 export default function* songsSaga() {
-  yield takeLatest(getStatsStart.type, fetchStatsSaga);
+  yield takeEvery(getStatsStart.type, fetchStatsSaga);
   yield takeLatest(getSongsStart.type, fetchSongSaga);
   yield takeLatest(createSongStart.type, createSongSaga);
   yield takeLatest(filterSongsStart.type, filterSongsSaga);

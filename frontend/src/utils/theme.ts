@@ -1,5 +1,3 @@
-// import { Theme } from '@emotion/react';
-
 export const theme = {
   colors: {
     primary: '#0070f3',

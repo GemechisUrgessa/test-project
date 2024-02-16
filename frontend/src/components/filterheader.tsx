@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import Box from "./box";
 import { css } from "@emotion/react";
 import { filterCriteria } from "../utils/types";
-
+import { useDispatch } from "react-redux";
+import { filterSongsStart } from "../features/songs/songsSlice";
 const inputStyle = css`
   padding: 8px;
   border: 1px solid #ddd;
@@ -21,11 +22,8 @@ const inputStyle = css`
   }
 `;
 
-const FilterHeader = ({
-  onFilter,
-}: {
-  onFilter: (filters: filterCriteria) => void;
-}) => {
+const FilterHeader = () => {
+  const dispatch = useDispatch();
   const [filters, setFilters] = useState({
     genre: "",
     artist: "",
@@ -39,16 +37,23 @@ const FilterHeader = ({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onFilter(filters);
+    if (filters.genre === "" && filters.artist === "" && filters.album === "") {
+      return;
+    }
+    const filterCriteria: filterCriteria = {
+      genre: filters.genre,
+      artist: filters.artist,
+      album: filters.album,
+    };
+    dispatch(filterSongsStart(filterCriteria));
   };
-
   return (
     <Box
       as="header"
       css={css`
         display: flex;
         justify-content: center;
-
+        color: black;
         padding: 1rem;
         background: #f5f5f5;
         border-bottom: 1px solid #ddd;
@@ -60,6 +65,10 @@ const FilterHeader = ({
           display: flex;
           gap: 1rem;
           flex-wrap: wrap;
+          color: black;
+          input {
+            color: gray;
+          }
         `}
       >
         <input
@@ -87,6 +96,9 @@ const FilterHeader = ({
           css={inputStyle}
         />
         <button
+          onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+            handleSubmit(e)
+          }
           type="submit"
           css={css`
             padding: 8px 16px;

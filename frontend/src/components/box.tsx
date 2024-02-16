@@ -1,4 +1,3 @@
-// src/components/Box.js
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import { space, color } from "styled-system";
