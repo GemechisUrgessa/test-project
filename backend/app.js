@@ -5,14 +5,23 @@ const dotenv = require("dotenv");
 const songRoutes = require("./src/api/v1/routes/songs");
 const errorHandler = require("./src/middlewares/errorHandler");
 const connectDB = require("./src/utils/config");
+const cors = require("cors");
 
-connectDB();
+connectDB()
+  .then(() => {
+    console.log("Database connected");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 dotenv.config();
 
 const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+
 app.use("/api/v1/routes", songRoutes);
 
 app.get("/", (req, res) => {

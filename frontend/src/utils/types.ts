@@ -14,6 +14,7 @@ interface song {
     genre: string;
     __v: number;
 }
+
 // {
 //     "success": true,
 //     "data": {
@@ -139,4 +140,9 @@ interface stats {
     songsInAlbums: { _id: string; count: number }[];
 }
 
-export type { song , stats};
+interface filterCriteria {
+    artist: string;
+    album: string;
+    genre: string;
+}
+export type { song , stats , filterCriteria };

@@ -33,6 +33,8 @@ exports.filterSongs = handleAsync(async (req, res) => {
 });
 
 exports.getStats = handleAsync(async (req, res) => {
+  console.log("getStats");
+
   const stats = await SongService.getStats();
   res.status(200).json({ success: true, data: stats });
 });
