@@ -1,6 +1,5 @@
 // Centralized Error Handling Middleware
 const errorHandler = (error, req, res, next) => {
-  // Log the error for debugging purposes
   console.error(error);
   let statusCode = 500;
   let message = "Internal Server Error";

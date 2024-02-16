@@ -50,7 +50,6 @@ const filter = async (criteria) => {
   if (Object.keys(query).length === 0) {
     throw new OneFieldRequiredError("One field required error");
   }
-  console.log(query);
   return Song.find(query);
 };
 
