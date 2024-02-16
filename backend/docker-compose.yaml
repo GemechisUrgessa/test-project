@@ -54,7 +54,7 @@ services:
 volumes:
   mongodb_data:
 
-networks:
-  default:
-    name: testProject
+# networks:
+#   default:
+#     name: testProject
 
