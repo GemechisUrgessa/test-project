@@ -97,7 +97,7 @@ const FilterHeader = () => {
         />
         <button
           onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-            handleSubmit(e)
+            handleSubmit(e as any)
           }
           type="submit"
           css={css`

@@ -26,6 +26,12 @@ function SongsPage() {
   const songs = useSelector((state: any) => state.songs);
   useEffect(() => {
     dispatch(getSongsStart());
+    setSongToCreate({
+      title: "",
+      album: "",
+      artist: "",
+      genre: "",
+    });
   }, [dispatch]);
   const handleCreateSongModal = () => {
     setIsModalOpen(true);
