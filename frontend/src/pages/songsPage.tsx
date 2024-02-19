@@ -5,7 +5,7 @@ import { theme } from "../utils/theme";
 import SongList from "../components/songList";
 import Statistics from "../components/statistics";
 import Box from "../components/box";
-import FilterHeader from "../components/filterheader";
+import FilterHeader from "../components/filterHeader";
 import Footer from "../components/footer";
 import { useDispatch, useSelector } from "react-redux";
 import { createSongStart, getSongsStart } from "../features/songs/songsSlice";

@@ -14,7 +14,6 @@ services:
     ports:
       - "27017:27017"
 
-
   mongo-express:
     container_name: mongo-ui
     image: mongo-express
@@ -23,6 +22,7 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: mongoadmin
       ME_CONFIG_MONGODB_ADMINPASSWORD: secret
       ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_URL: mongodb://mongoadmin:secret@mongodb:27017/
     ports:
       - "8081:8081"
     depends_on:
@@ -39,9 +39,8 @@ services:
     depends_on:
       - mongo
     environment:
-      - MONGO_URI=mongodb://mongoadmin:secret@mongo:27017/musicApp
+      - MONGO_URI=mongodb://mongoadmin:secret@mongodb:27017/
       - PORT=3000
-
     command: npm start
   dozzle:
     container_name: dozzle
@@ -54,7 +53,7 @@ services:
 volumes:
   mongodb_data:
 
-# networks:
-#   default:
-#     name: testProject
+networks:
+  default:
+    name: testProject
 
